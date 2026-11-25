@@ -47,14 +47,18 @@ rules:
     - Issue-Nummer und betroffene REQ-IDs (neu/geändert/entfernt) nennen
     - Explizit angeben, was außerhalb des Scopes liegt
   specs:
-    - 'Jede Anforderung beginnt mit ihrer ID im Namen, z. B. "### Requirement: REQ-LISTING-003 Anzeige bearbeiten"'
+    - 'Jede Anforderung beginnt mit ihrer ID im Namen, z. B. "### Requirement:
+      REQ-LISTING-003 Anzeige bearbeiten"'
     - 'Jede Anforderung hat mindestens ein "#### Scenario:" im WHEN/THEN-Format'
     - Bei MODIFIED/REMOVED die bestehende ID unverändert übernehmen
   design:
-    - Betroffene API-Endpunkte (Methode + Route) und EF-Core-Entitäten/Migrations aufführen
-    - Auswirkungen auf docker-compose (neue Services, Env-Variablen, Ports) nennen, falls vorhanden
+    - Betroffene API-Endpunkte (Methode + Route) und
+      EF-Core-Entitäten/Migrations aufführen
+    - Auswirkungen auf docker-compose (neue Services, Env-Variablen, Ports)
+      nennen, falls vorhanden
   tasks:
-    - Pro Anforderung einen Task für die Tests mit passendem Trait bzw. Testtitel anlegen
+    - Pro Anforderung einen Task für die Tests mit passendem Trait bzw.
+      Testtitel anlegen
     - Tasks klein halten, sodass die Change in einem PR reviewbar bleibt
     - Letzter Task prüft, dass `docker compose up` und alle Tests grün laufen
 
@@ -62,7 +66,11 @@ operations:
   apply:
     guidance:
       - Nur auf dem Branch des zugehörigen Issues arbeiten, nicht auf main
-      - Vor Abschluss prüfen, dass jede REQ-ID der Change mindestens einen Test hat
+      - Vor Abschluss prüfen, dass jede REQ-ID der Change mindestens einen Test
+        hat
   archive:
     guidance:
-      - Vor dem Archivieren sicherstellen, dass der PR gemerged ist oder gemerged wird
+      - Vor dem Archivieren sicherstellen, dass der PR gemerged ist oder
+        gemerged wird
+githubCopilot:
+  cloudAgent: true
