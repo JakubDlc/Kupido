@@ -1,0 +1,68 @@
+schema: spec-driven
+
+# Project context: constraints for OpenSpec artifacts and workflows.
+# Only facts an agent cannot infer from the code belong here.
+context: |
+  Produkt: Kupido ist ein Online-Kleinanzeigen-Marktplatz nach dem Vorbild von willhaben.
+  Registrierte Benutzer stellen gebrauchte Artikel als Anzeigen ein; andere Benutzer
+  suchen und filtern Anzeigen und kontaktieren den Verkäufer direkt. Kupido wickelt
+  keine Zahlungen, keinen Versand und keinen Käuferschutz ab; das ist außerhalb des Scopes,
+  sofern eine Änderung es nicht ausdrücklich einführt.
+
+  Team und Arbeitsweise: 5er-Schulprojektteam (SYP, 4AHINF), agentischer, spec-getriebener
+  Workflow mit OpenSpec + Claude Code + Codex + Freebuff. Specs sind die Quelle der Wahrheit; Code folgt den Specs.
+
+  Tech-Stack:
+  - Frontend: Angular (TypeScript)
+  - Backend: ASP.NET Core Web API (C#), REST/JSON
+  - Datenbank: PostgreSQL mit Entity Framework Core (Code-First, Schemaänderungen nur über EF-Core-Migrations)
+  - Tests Backend: xUnit
+  - Betrieb lokal und Abgabe: docker-compose (Frontend, Backend, PostgreSQL); jede Änderung
+    muss mit `docker compose up` lauffähig bleiben
+
+  Sprache: Artefakte (proposal, design, specs, tasks) auf Deutsch. Code, Bezeichner,
+  API-Routen, Commit-Messages und Branch-Namen auf Englisch.
+
+  Anforderungs-IDs:
+  - Format REQ-<MODUL>-<Nr>, Nr dreistellig mit führenden Nullen, z. B. REQ-AUTH-001.
+  - Modulkürzel: AUTH (Registrierung, Login, Session), USER (Profil, Konto),
+    LISTING (Anzeigen erstellen/bearbeiten/löschen, Bilder, Kategorien),
+    SEARCH (Suche, Filter, Sortierung), CONTACT (Kontakt/Nachrichten an Verkäufer),
+    ADMIN (Moderation). Neue Module nur mit kurzer Begründung im proposal einführen.
+  - IDs sind stabil: nie umnummerieren oder wiederverwenden; entfernte Anforderungen
+    behalten ihre ID im Verlauf. Neue Anforderungen bekommen die nächste freie Nummer im Modul.
+
+  Rückverfolgbarkeit: Jede Anforderung muss durch mindestens einen automatisierten Test
+  abgedeckt sein. Backend-Tests (xUnit) tragen die ID als Trait, z. B.
+  [Trait("Req", "REQ-AUTH-001")]; ein Test darf mehrere Traits haben.
+  Angular-Tests nennen die ID im Titel von describe/it, z. B. it('REQ-SEARCH-002: ...').
+
+  Git-Workflow: ein Issue = ein Branch = ein PR = eine OpenSpec-Change.
+  Der Change-Name entspricht dem Branch-Namen ohne Präfix (kebab-case). PRs gehen gegen main,
+  referenzieren das Issue (z. B. "Closes #12") und listen die betroffenen REQ-IDs.
+  Keine Änderung umfasst mehr als ein Issue.
+
+rules:
+  proposal:
+    - Issue-Nummer und betroffene REQ-IDs (neu/geändert/entfernt) nennen
+    - Explizit angeben, was außerhalb des Scopes liegt
+  specs:
+    - 'Jede Anforderung beginnt mit ihrer ID im Namen, z. B. "### Requirement: REQ-LISTING-003 Anzeige bearbeiten"'
+    - 'Jede Anforderung hat mindestens ein "#### Scenario:" im WHEN/THEN-Format'
+    - Bei MODIFIED/REMOVED die bestehende ID unverändert übernehmen
+  design:
+    - Betroffene API-Endpunkte (Methode + Route) und EF-Core-Entitäten/Migrations aufführen
+    - Auswirkungen auf docker-compose (neue Services, Env-Variablen, Ports) nennen, falls vorhanden
+  tasks:
+    - Pro Anforderung einen Task für die Tests mit passendem Trait bzw. Testtitel anlegen
+    - Tasks klein halten, sodass die Change in einem PR reviewbar bleibt
+    - Letzter Task prüft, dass `docker compose up` und alle Tests grün laufen
+
+operations:
+  apply:
+    guidance:
+      - Nur auf dem Branch des zugehörigen Issues arbeiten, nicht auf main
+      - Vor Abschluss prüfen, dass jede REQ-ID der Change mindestens einen Test hat
+  archive:
+    guidance:
+      - Vor dem Archivieren sicherstellen, dass der PR gemerged ist oder gemerged wird
